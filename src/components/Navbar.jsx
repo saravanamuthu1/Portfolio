@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Check if user already selected a mode
     const savedMode = localStorage.getItem('theme');
     if (savedMode === 'dark') {
       setDarkMode(true);
@@ -29,17 +29,25 @@ function Navbar() {
         <div className="text-lg font-semibold">
           <Link to="/" className="hover:text-blue-500 dark:hover:text-blue-300">Home</Link>
         </div>
-        <div className="flex space-x-6 items-center">
+
+        <div className="md:hidden">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        <div className="hidden md:flex space-x-6 items-center">
           <Link to="/about" className="hover:text-blue-500 dark:hover:text-blue-300">About Me</Link>
           <Link to="/experience" className="hover:text-blue-500 dark:hover:text-blue-300">Experience</Link>
           <Link to="/projects" className="hover:text-blue-500 dark:hover:text-blue-300">Projects</Link>
           <Link to="/certifications" className="hover:text-blue-500 dark:hover:text-blue-300">Certifications</Link>
-
-          {/* Dark Mode Toggle Button */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="flex items-center bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-          >
+          <button onClick={() => setDarkMode(!darkMode)} className="flex items-center bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition">
             {darkMode ? (
               <span className="flex items-center space-x-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,6 +66,18 @@ function Navbar() {
           </button>
         </div>
       </div>
+
+      {isMenuOpen && (
+        <div className="md:hidden flex flex-col space-y-4 mt-4">
+          <Link to="/about" onClick={() => setIsMenuOpen(false)} className="hover:text-blue-500 dark:hover:text-blue-300">About Me</Link>
+          <Link to="/experience" onClick={() => setIsMenuOpen(false)} className="hover:text-blue-500 dark:hover:text-blue-300">Experience</Link>
+          <Link to="/projects" onClick={() => setIsMenuOpen(false)} className="hover:text-blue-500 dark:hover:text-blue-300">Projects</Link>
+          <Link to="/certifications" onClick={() => setIsMenuOpen(false)} className="hover:text-blue-500 dark:hover:text-blue-300">Certifications</Link>
+          <button onClick={() => { setDarkMode(!darkMode); setIsMenuOpen(false); }} className="flex items-center bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
